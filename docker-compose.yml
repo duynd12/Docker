@@ -1,0 +1,48 @@
+# version: "3"
+# services:
+#  app:
+#   container_name: app
+#   restart: always
+#   build: .
+#   ports:
+#     - "4001:4001"
+#   links:
+#     - mongo
+#  mongo:
+#   container_name: mongo
+#   image: mongo
+#   ports:
+#     - "27017:27017"
+version: '3.8'
+
+services:
+  node-app:
+    build: .
+    image: node-app
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - '8085:8085'
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/src
+    networks:
+      - node-network
+
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - node-network
+
+volumes:
+  dbdata6:
+
+networks:
+  node-network:
+    driver: bridge
